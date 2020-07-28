@@ -2,7 +2,7 @@
 
 ### Motivation
 
-Svelte subscription system lacks possibility to observe nested objects. This Svelte component lets you listen on MobX observable changes and update accordingly.
+Svelte subscription system lacks possibility to observe values in deeply nested objects. This Svelte component lets you listen on MobX observable changes and update accordingly.
 
 ### Example
 

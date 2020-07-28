@@ -5,10 +5,10 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^6.0.0",
-    "rollup": "^1.20.0",
-    "rollup-plugin-svelte": "^5.0.0",
-    "svelte": "^3.0.0"
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "rollup": "^2.23.0",
+    "rollup-plugin-svelte": "^5.2.3",
+    "svelte": "^3.24.0"
   },
   "keywords": [
     "svelte"
@@ -29,6 +29,6 @@
     "url": "https://github.com/episage/svelte-mobx-observer/issues"
   },
   "peerDependencies": {
-    "mobx": "^5.15.4"
+    "mobx": "^6.2.4"
   }
 }

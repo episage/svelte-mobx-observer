@@ -1,5 +1,9 @@
 ## Svelte MobX Observer
 
+### Motivation
+
+Svelte subscription system lacks possibility to observe nested objects. This Svelte component lets you listen on MobX observable changes and update accordingly.
+
 ### Example
 
 ```svelte
@@ -42,13 +46,12 @@ main {
 yarn add svelte-mobx-observer
 ```
 
-### Motivation
-
-Svelte subscription system lacks possibility to observe nested objects.
-
 ### Method
 
 This is a hand crafted component on a basis of Svelte generated code.
+
+ - `stage1` - dir with Svelte generated files from `Component.svelte`
+ - `stage2` - dist dir with hand modified files from `stage1`
 
 ### Requirements
 

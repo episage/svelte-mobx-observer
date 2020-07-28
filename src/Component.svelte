@@ -1,5 +1,5 @@
 <script>
-    import { reaction } from 'mobx';
+    import { autorun } from 'mobx';
 </script>
-
+    
 <slot />

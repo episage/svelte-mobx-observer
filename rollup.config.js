@@ -10,8 +10,8 @@ const name = pkg.name
 export default {
 	input: 'src/index.js',
 	output: [
-		{ file: 'generated/index.mjs', 'format': 'es' },
-		{ file: 'generated/index.js', 'format': 'umd', name }
+		{ file: 'stage1/index.mjs', 'format': 'es' },
+		{ file: 'stage1/index.js', 'format': 'umd', name }
 	],
 	plugins: [
 		svelte(),

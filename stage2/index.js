@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global = global || self, global.Sveltecomponent = factory());
+    (global = global || self, global.MobxObserver = factory());
 }(this, (function () { 'use strict';
 
     function noop() { }
@@ -2075,115 +2075,8 @@
             });
         }
     }
-
-    function dontReassignFields() {
-        fail(process.env.NODE_ENV !== "production" && "@action fields are not reassignable");
-    }
-    function namedActionDecorator(name) {
-        return function (target, prop, descriptor) {
-            if (descriptor) {
-                if (process.env.NODE_ENV !== "production" && descriptor.get !== undefined) {
-                    return fail("@action cannot be used with getters");
-                }
-                // babel / typescript
-                // @action method() { }
-                if (descriptor.value) {
-                    // typescript
-                    return {
-                        value: createAction(name, descriptor.value),
-                        enumerable: false,
-                        configurable: true,
-                        writable: true // for typescript, this must be writable, otherwise it cannot inherit :/ (see inheritable actions test)
-                    };
-                }
-                // babel only: @action method = () => {}
-                var initializer_1 = descriptor.initializer;
-                return {
-                    enumerable: false,
-                    configurable: true,
-                    writable: true,
-                    initializer: function () {
-                        // N.B: we can't immediately invoke initializer; this would be wrong
-                        return createAction(name, initializer_1.call(this));
-                    }
-                };
-            }
-            // bound instance methods
-            return actionFieldDecorator(name).apply(this, arguments);
-        };
-    }
-    function actionFieldDecorator(name) {
-        // Simple property that writes on first invocation to the current instance
-        return function (target, prop, descriptor) {
-            Object.defineProperty(target, prop, {
-                configurable: true,
-                enumerable: false,
-                get: function () {
-                    return undefined;
-                },
-                set: function (value) {
-                    addHiddenProp(this, prop, action(name, value));
-                }
-            });
-        };
-    }
-    function boundActionDecorator(target, propertyName, descriptor, applyToInstance) {
-        if (applyToInstance === true) {
-            defineBoundAction(target, propertyName, descriptor.value);
-            return null;
-        }
-        if (descriptor) {
-            // if (descriptor.value)
-            // Typescript / Babel: @action.bound method() { }
-            // also: babel @action.bound method = () => {}
-            return {
-                configurable: true,
-                enumerable: false,
-                get: function () {
-                    defineBoundAction(this, propertyName, descriptor.value || descriptor.initializer.call(this));
-                    return this[propertyName];
-                },
-                set: dontReassignFields
-            };
-        }
-        // field decorator Typescript @action.bound method = () => {}
-        return {
-            enumerable: false,
-            configurable: true,
-            set: function (v) {
-                defineBoundAction(this, propertyName, v);
-            },
-            get: function () {
-                return undefined;
-            }
-        };
-    }
-
-    var action = function action(arg1, arg2, arg3, arg4) {
-        // action(fn() {})
-        if (arguments.length === 1 && typeof arg1 === "function")
-            return createAction(arg1.name || "<unnamed action>", arg1);
-        // action("name", fn() {})
-        if (arguments.length === 2 && typeof arg2 === "function")
-            return createAction(arg1, arg2);
-        // @action("name") fn() {}
-        if (arguments.length === 1 && typeof arg1 === "string")
-            return namedActionDecorator(arg1);
-        // @action fn() {}
-        if (arg4 === true) {
-            // apply to instance immediately
-            addHiddenProp(arg1, arg2, createAction(arg1.name || arg2, arg3.value, this));
-        }
-        else {
-            return namedActionDecorator(arg2).apply(null, arguments);
-        }
-    };
-    action.bound = boundActionDecorator;
     function isAction(thing) {
         return typeof thing === "function" && thing.isMobxAction === true;
-    }
-    function defineBoundAction(target, propertyName, fn) {
-        addHiddenProp(target, propertyName, createAction(propertyName, fn.bind(target)));
     }
 
     /**
@@ -2235,61 +2128,6 @@
             : opts.delay
                 ? function (f) { return setTimeout(f, opts.delay); }
                 : run$1;
-    }
-    function reaction(expression, effect, opts) {
-        if (opts === void 0) { opts = EMPTY_OBJECT; }
-        if (process.env.NODE_ENV !== "production") {
-            invariant(typeof expression === "function", "First argument to reaction should be a function");
-            invariant(typeof opts === "object", "Third argument of reactions should be an object");
-        }
-        var name = opts.name || "Reaction@" + getNextId();
-        var effectAction = action(name, opts.onError ? wrapErrorHandler(opts.onError, effect) : effect);
-        var runSync = !opts.scheduler && !opts.delay;
-        var scheduler = createSchedulerFromOptions(opts);
-        var firstTime = true;
-        var isScheduled = false;
-        var value;
-        var equals = opts.compareStructural
-            ? comparer.structural
-            : opts.equals || comparer.default;
-        var r = new Reaction(name, function () {
-            if (firstTime || runSync) {
-                reactionRunner();
-            }
-            else if (!isScheduled) {
-                isScheduled = true;
-                scheduler(reactionRunner);
-            }
-        }, opts.onError, opts.requiresObservable);
-        function reactionRunner() {
-            isScheduled = false; // Q: move into reaction runner?
-            if (r.isDisposed)
-                return;
-            var changed = false;
-            r.track(function () {
-                var nextValue = expression(r);
-                changed = firstTime || !equals(value, nextValue);
-                value = nextValue;
-            });
-            if (firstTime && opts.fireImmediately)
-                effectAction(value, r);
-            if (!firstTime && changed === true)
-                effectAction(value, r);
-            if (firstTime)
-                firstTime = false;
-        }
-        r.schedule();
-        return r.getDisposer();
-    }
-    function wrapErrorHandler(errorHandler, baseFn) {
-        return function () {
-            try {
-                return baseFn.apply(this, arguments);
-            }
-            catch (e) {
-                errorHandler.call(this, e);
-            }
-        };
     }
 
     function onBecomeObserved(thing, arg2, arg3) {

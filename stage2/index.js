@@ -4213,21 +4213,34 @@
         const default_slot_template = /*$$slots*/ ctx[1].default;
         let default_slot;
 
-        let was_synchronous_run = false;
-        console.log(`pre reaction`)
-        reaction(function(r,e,f,g){
-            console.log(`inside reaction`)
-            default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
-            was_synchronous_run = true;
-            return {};
-        }, function(a,b,c,d) {
-            console.log(`rereun reaction`)
-            debugger;
-            p_function(ctx, [-1]);
+        let was_mobx_sync_run = false;
+        let render_counter = 0;
 
+        function firstRenderFun(){
+            default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
+            was_mobx_sync_run = true;
+            render_counter++;
+            return {};
+        }
+
+        function updateFun(){
+            p_function(ctx, [-1]);
+        }
+
+        function getRightFun(){
+            if(render_counter ===0){
+                return firstRenderFun();
+            }else{
+                return updateFun();
+            }
+        }
+
+        const disposeMobX = autorun(()=>{
+            getRightFun();
         })
+
         console.log(`post reaction`)
-        if (was_synchronous_run === false) {
+        if (was_mobx_sync_run === false) {
             throw new Error('You must not use MobX reaction/autorun when a component is being created')
         }
 
@@ -4253,13 +4266,15 @@
     			current = false;
     		},
     		d(detaching) {
-    			if (default_slot) default_slot.d(detaching);
+                if (default_slot) default_slot.d(detaching);
+                if (detaching) {
+                    disposeMobX();
+                }
     		}
         };
         
-        console.log('HEREIAM')
-        block.p(ctx,[-1]);//test
         return block;
+
         function p_function(ctx, [dirty]) {
             if (default_slot) {
                 if (default_slot.p && dirty & /*$$scope*/ 1) {

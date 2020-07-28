@@ -31,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/sveltejs/component-template/issues"
   },
-  "homepage": "https://github.com/sveltejs/component-template#readme"
+  "homepage": "https://github.com/sveltejs/component-template#readme",
+  "dependencies": {
+    "mobx": "^5.15.4"
+  }
 }

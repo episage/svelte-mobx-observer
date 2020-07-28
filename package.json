@@ -1,6 +1,5 @@
 {
   "name": "sveltecomponent",
-  "svelte": "src/index.js",
   "main": "stage2/index.js",
   "scripts": {
     "build": "rollup -c",

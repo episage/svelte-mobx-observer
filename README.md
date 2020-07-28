@@ -1,35 +1,58 @@
-*Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)*
+## Svelte MobX Observer
 
----
+### Example
 
-# component-template
+```svelte
+<script>
+  import { observable } from "mobx";
+  import Observer from "svelte-mobx-observer";
 
-A base for building shareable Svelte components. Clone it with [degit](https://github.com/Rich-Harris/degit):
+  let foo = observable({ // standard, MobX observable
+    deeply: {
+      nested: {
+        counter: 1
+      }
+    }
+  });
 
-```bash
-npx degit sveltejs/component-template my-new-component
-cd my-new-component
-npm install # or yarn
+  let counterVisible = true; // works with conditionals as well
+
+  window.foo = foo; // you can use the "foo" observable everywhere, it works from window and **nested components** AS WELL
+</script>
+
+<Observer>
+  <main on:click={() => foo.deeply.nested.counter++}>
+	<div on:click={()=> counterVisible = !counterVisible}>Counting up... click me to toggle</div>
+	{#if counterVisible}
+		<h1>{foo.deeply.nested.counter}</h1>	
+	{/if}
+  </main>
+</Observer>
+
+<style>
+main {
+	cursor: pointer;
+}
+</style>
 ```
 
-Your component's source code lives in `src/Component.svelte`.
+### Installation
 
-You can create a package that exports multiple components by adding them to the `src` directory and editing `src/index.js` to reexport them as named exports.
+```
+yarn add svelte-mobx-observer
+```
 
-TODO
+### Motivation
 
-* [ ] some firm opinions about the best way to test components
-* [ ] update `degit` so that it automates some of the setup work
+Svelte subscription system lacks possibility to observe nested objects.
+
+### Method
+
+This is a hand crafted component on a basis of Svelte generated code.
+
+### Requirements
+
+ - MobX `^5.15.4`
+ - Svelte `^3.24.0`
 
 
-## Setting up
-
-* Run `npm init` (or `yarn init`)
-* Replace this README with your own
-
-
-## Consuming components
-
-Your package.json has a `"svelte"` field pointing to `src/index.js`, which allows Svelte apps to import the source code directly, if they are using a bundler plugin like [rollup-plugin-svelte](https://github.com/sveltejs/rollup-plugin-svelte) or [svelte-loader](https://github.com/sveltejs/svelte-loader) (where [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#resolve-mainfields) in your webpack config includes `"svelte"`). **This is recommended.**
-
-For everyone else, `npm run build` will bundle your component's source code into a plain JavaScript module (`dist/index.mjs`) and a UMD script (`dist/index.js`). This will happen automatically when you publish your component to npm, courtesy of the `prepublishOnly` hook in package.json.

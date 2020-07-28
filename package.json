@@ -1,5 +1,5 @@
 {
-  "name": "sveltecomponent",
+  "name": "svelte-mobx-observer",
   "main": "stage2/index.js",
   "scripts": {
     "build": "rollup -c",
@@ -16,20 +16,19 @@
   ],
   "files": [
     "src",
-    "dist"
+    "stage2"
   ],
-  "description": "*Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)*",
+  "description": "Svelte to MobX integration",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sveltejs/component-template.git"
+    "url": "git@github.com:episage/svelte-mobx-observer.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Tomasz Ciborski",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sveltejs/component-template/issues"
+    "url": "https://github.com/episage/svelte-mobx-observer/issues"
   },
-  "homepage": "https://github.com/sveltejs/component-template#readme",
   "dependencies": {
     "mobx": "^5.15.4"
   }

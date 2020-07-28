@@ -21,7 +21,7 @@ Svelte subscription system lacks possibility to observe values in deeply nested 
 
   let counterVisible = true; // works with conditionals as well
 
-  window.foo = foo; // you can use the "foo" observable everywhere, it works from window and **nested components** AS WELL
+  window.foo = foo; // you can use the "foo" observable anyywhere, it works at window and inside **nested components** AS WELL
 </script>
 
 <Observer>

@@ -1,4 +1,4 @@
-import 'mobx';
+import { autorun } from 'mobx';
 
 function noop() { }
 function assign(tar, src) {

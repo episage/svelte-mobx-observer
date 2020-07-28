@@ -29,6 +29,6 @@
     "url": "https://github.com/episage/svelte-mobx-observer/issues"
   },
   "peerDependencies": {
-    "mobx": "^6.2.4"
+    "mobx": "^6.0.0-rc.1"
   }
 }

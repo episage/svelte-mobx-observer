@@ -4214,13 +4214,30 @@
         let default_slot;
 
         let was_synchronous_run = false;
-        reaction(function(){
+        let reaction_run_counter = 0;
+        let preserveNowObserving='fantastic';
+        console.log(`pre reaction`)
+        reaction(function(r,e,f,g){
+            if(reaction_run_counter >=1 ) {
+                // preserveNowObserving.forEach(no=>{
+                //     r.nowObserving.push(no);
+                // })
+                r.nowObserving = preserveNowObserving;
+                r.observing = preserveNowObserving;
+                return {};
+            }
+            console.log(`inside reaction`)
             default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
             was_synchronous_run = true;
+            reaction_run_counter++;
+            preserveNowObserving = r.newObserving.filter(Boolean);
             return {};
-        }, function() {
+        }, function(a,b,c,d) {
+            console.log(`rereun reaction`)
+            debugger;
             p_function(ctx, [-1]);
         })
+        console.log(`post reaction`)
         if (was_synchronous_run === false) {
             throw new Error('You must not use MobX reaction/autorun when a component is being created')
         }
@@ -4251,11 +4268,13 @@
     		}
         };
         
+        console.log('HEREIAM')
+        block.p(ctx,[-1]);//test
         return block;
-
         function p_function(ctx, [dirty]) {
             if (default_slot) {
                 if (default_slot.p && dirty & /*$$scope*/ 1) {
+                    ctx[0].dirty = -1; 
                     update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[0], dirty, null, null);
                 }
             }

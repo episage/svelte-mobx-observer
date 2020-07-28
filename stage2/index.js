@@ -4210,10 +4210,22 @@
 
     function create_fragment(ctx) {
     	let current;
-    	const default_slot_template = /*$$slots*/ ctx[1].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
+        const default_slot_template = /*$$slots*/ ctx[1].default;
+        let default_slot;
 
-    	return {
+        let was_synchronous_run = false;
+        reaction(function(){
+            default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
+            was_synchronous_run = true;
+            return {};
+        }, function() {
+            p_function(ctx, [-1]);
+        })
+        if (was_synchronous_run === false) {
+            throw new Error('You must not use MobX reaction/autorun when a component is being created')
+        }
+
+    	const block = {
     		c() {
     			if (default_slot) default_slot.c();
     		},
@@ -4224,13 +4236,7 @@
 
     			current = true;
     		},
-    		p(ctx, [dirty]) {
-    			if (default_slot) {
-    				if (default_slot.p && dirty & /*$$scope*/ 1) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[0], dirty, null, null);
-    				}
-    			}
-    		},
+    		p: p_function,
     		i(local) {
     			if (current) return;
     			transition_in(default_slot, local);
@@ -4243,7 +4249,17 @@
     		d(detaching) {
     			if (default_slot) default_slot.d(detaching);
     		}
-    	};
+        };
+        
+        return block;
+
+        function p_function(ctx, [dirty]) {
+            if (default_slot) {
+                if (default_slot.p && dirty & /*$$scope*/ 1) {
+                    update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[0], dirty, null, null);
+                }
+            }
+        };
     }
 
     function instance($$self, $$props, $$invalidate) {

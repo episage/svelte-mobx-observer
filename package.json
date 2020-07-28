@@ -1,7 +1,6 @@
 {
   "name": "svelte-mobx-observer",
   "module": "stage2/index.mjs",
-  "main": "stage2/index.js",
   "scripts": {
     "build": "rollup -c"
   },
@@ -19,7 +18,7 @@
     "stage2"
   ],
   "description": "Svelte to MobX integration",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "repository": {
     "type": "git",
     "url": "git@github.com:episage/svelte-mobx-observer.git"

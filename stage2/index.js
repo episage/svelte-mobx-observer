@@ -4214,23 +4214,11 @@
         let default_slot;
 
         let was_synchronous_run = false;
-        let reaction_run_counter = 0;
-        let preserveNowObserving='fantastic';
         console.log(`pre reaction`)
         reaction(function(r,e,f,g){
-            if(reaction_run_counter >=1 ) {
-                // preserveNowObserving.forEach(no=>{
-                //     r.nowObserving.push(no);
-                // })
-                r.nowObserving = preserveNowObserving;
-                r.observing = preserveNowObserving;
-                return {};
-            }
             console.log(`inside reaction`)
             default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
             was_synchronous_run = true;
-            reaction_run_counter++;
-            preserveNowObserving = r.newObserving.filter(Boolean);
             return {};
         }, function(a,b,c,d) {
             console.log(`rereun reaction`)

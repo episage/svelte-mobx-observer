@@ -4224,6 +4224,7 @@
             console.log(`rereun reaction`)
             debugger;
             p_function(ctx, [-1]);
+
         })
         console.log(`post reaction`)
         if (was_synchronous_run === false) {

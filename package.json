@@ -19,7 +19,7 @@
     "stage2"
   ],
   "description": "Svelte to MobX integration",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": {
     "type": "git",
     "url": "git@github.com:episage/svelte-mobx-observer.git"

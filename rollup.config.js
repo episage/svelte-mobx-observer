@@ -10,7 +10,7 @@ const name = pkg.name
 export default {
 	input: 'src/index.js',
 	output: [
-		{ file: 'stage1/index.mjs', 'format': 'es' },
+		// { file: 'stage1/index.mjs', 'format': 'es' },
 		{ file: 'stage1/index.js', 'format': 'umd', name }
 	],
 	plugins: [

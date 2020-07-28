@@ -1,5 +1,5 @@
 {
-  "name": "SvelteComponent",
+  "name": "sveltecomponent",
   "svelte": "src/index.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
@@ -19,5 +19,17 @@
   "files": [
     "src",
     "dist"
-  ]
+  ],
+  "description": "*Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)*",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/component-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sveltejs/component-template/issues"
+  },
+  "homepage": "https://github.com/sveltejs/component-template#readme"
 }

@@ -40,6 +40,10 @@ main {
 </style>
 ```
 
+### Starter project
+
+[GitHub: Svelte - MobX Starter](https://github.com/episage/svelte-mobx-observer-starter)
+
 ### Installation
 
 ```

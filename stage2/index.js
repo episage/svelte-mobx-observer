@@ -4211,7 +4211,6 @@
     function create_fragment(ctx) {
         let was_called_from_this_closure = true;
 
-        console.log(`CFF`)
     	let current;
         const default_slot_template = /*$$slots*/ ctx[1].default;
         let default_slot;
@@ -4248,23 +4247,18 @@
             })
         }
 
-        console.log(`post reaction`)
         if (was_mobx_sync_run === false) {
             throw new Error('You must not use MobX reaction/autorun when a component is being created')
         }
 
     	const block = {
     		c() {
-                console.log(`ccccc222`)
     			if (default_slot) {
-                    console.log(`ccccc`)
                     default_slot.c();
                 }
     		},
     		m(target, anchor) {
-                console.log(`mmmmm`)
     			if (default_slot) {
-                    console.log(`mmmmm`)
     				default_slot.m(target, anchor);
     			}
 
@@ -4272,21 +4266,17 @@
     		},
     		p: p_function,
     		i(local) {
-                console.log(`i`)
     			if (current) return;
     			transition_in(default_slot, local);
     			current = true;
     		},
     		o(local) {
-                console.log(`o`)
     			transition_out(default_slot, local);
     			current = false;
     		},
     		d(detaching) {
-                console.log(`ddddd`)
                 if (default_slot) default_slot.d(detaching);
                 if (detaching) {
-                    console.log(`dispose mobx`)
                     disposeMobX && disposeMobX();
                 }
     		}
@@ -4301,7 +4291,7 @@
                     ctx[0].dirty = -1;
 
                     if(!was_called_from_this_closure){
-                        // console.log(`WAS NOT CALLED FROM THIS CLOSURE MOUNT/UNMOUNT PROBABLY`)
+                        // NOTE: WAS NOT CALLED FROM THIS CLOSURE MOUNT/UNMOUNT PROBABLY
                         disposeMobX && disposeMobX();
                         makeReactive();
                         // TODO if no subscribptions observableNow? then dispose! MEM LEAK HERE
@@ -4313,15 +4303,6 @@
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	reaction(
-    		() => {
-    			
-    		},
-    		() => {
-    			console.log("abecadlo");
-    		}
-    	);
-
     	let { $$slots = {}, $$scope } = $$props;
 
     	$$self.$set = $$props => {
